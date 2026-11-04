@@ -68,3 +68,4 @@ medventory/
 5. **Security, Authentication & Role-Based Access Control (RBAC)**
    - Granular authorization for administrators, pharmacists, cashiers, and inventory managers.
    - Secure session handling, audit trailing, and transactional consistency across all operations.
+

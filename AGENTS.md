@@ -77,3 +77,4 @@ Welcome to the **Medventory** project codebase. Medventory is a production-orien
   - Do not implement unassigned features, extraneous configurations, or speculative modules ahead of time.
 - **Explain Architectural Decisions**:
   - Document the rationale behind non-obvious architecture choices, data models, and critical business logic in commit descriptions, pull requests, or `docs/`.
+
