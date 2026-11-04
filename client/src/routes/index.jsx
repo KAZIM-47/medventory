@@ -4,6 +4,8 @@ import { AppShell } from '../components/layout/AppShell';
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
 import { MedicinesPage } from '../features/medicines/pages/MedicinesPage';
 import { InventoryPage } from '../features/inventory/pages/InventoryPage';
+import { SuppliersPage } from '../features/suppliers/pages/SuppliersPage';
+import { CustomersPage } from '../features/customers/pages/CustomersPage';
 import { PlaceholderPage } from '../components/ui/PlaceholderPage';
 import {
   Pill,
@@ -34,14 +36,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'suppliers',
-        element: (
-          <PlaceholderPage
-            title="Supplier Management"
-            moduleName="Suppliers"
-            description="Maintain authorized pharmaceutical distributors, contact records, payment terms, and lead times."
-            icon={Truck}
-          />
-        ),
+        element: <SuppliersPage />,
+      },
+      {
+        path: 'customers',
+        element: <CustomersPage />,
       },
       {
         path: 'purchases',
