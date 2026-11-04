@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { AppShell } from '../components/layout/AppShell';
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
 import { MedicinesPage } from '../features/medicines/pages/MedicinesPage';
+import { InventoryPage } from '../features/inventory/pages/InventoryPage';
 import { PlaceholderPage } from '../components/ui/PlaceholderPage';
 import {
   Pill,
@@ -29,14 +30,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'inventory',
-        element: (
-          <PlaceholderPage
-            title="Inventory & Batch Management"
-            moduleName="Inventory"
-            description="Monitor real-time warehouse stock, batch expiration dates, lot numbers, and stock level thresholds."
-            icon={Boxes}
-          />
-        ),
+        element: <InventoryPage />,
       },
       {
         path: 'suppliers',

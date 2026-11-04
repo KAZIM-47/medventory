@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { INITIAL_MEDICINES } from '../data/mockMedicinesData';
+import { useMedicines } from '../../../context/MedicineContext';
 import { MedicineFilters } from '../components/MedicineFilters';
 import { MedicineTable } from '../components/MedicineTable';
 import { MedicinePagination } from '../components/MedicinePagination';
@@ -7,20 +7,28 @@ import { MedicineDetailModal } from '../components/MedicineDetailModal';
 import { MedicineFormModal } from '../components/MedicineFormModal';
 import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
-import { Card, CardContent } from '../../../components/ui/Card';
+import { Card } from '../../../components/ui/Card';
 import {
   Pill,
   CheckCircle2,
   AlertTriangle,
   XCircle,
-  RefreshCw,
+  RotateCcw,
   Plus,
   Trash2,
   Check,
 } from 'lucide-react';
 
 export function MedicinesPage() {
-  const [medicines, setMedicines] = useState(INITIAL_MEDICINES);
+  const {
+    medicines,
+    metrics,
+    addMedicine,
+    updateMedicine,
+    deleteMedicine,
+    resetSampleData,
+  } = useMedicines();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
@@ -41,18 +49,6 @@ export function MedicinesPage() {
       setToastMessage(null);
     }, 3500);
   };
-
-  // High-level summary metrics
-  const stats = useMemo(() => {
-    const total = medicines.length;
-    const inStock = medicines.filter((m) => m.currentStock > m.reorderLevel).length;
-    const lowStock = medicines.filter(
-      (m) => m.currentStock > 0 && m.currentStock <= m.reorderLevel
-    ).length;
-    const outOfStock = medicines.filter((m) => m.currentStock === 0).length;
-
-    return { total, inStock, lowStock, outOfStock };
-  }, [medicines]);
 
   // Filtered dataset
   const filteredMedicines = useMemo(() => {
@@ -115,26 +111,21 @@ export function MedicinesPage() {
     return filteredMedicines.slice(startIndex, startIndex + pageSize);
   }, [filteredMedicines, currentPage, pageSize]);
 
-  // Simulated Reload
-  const handleReload = () => {
-    setIsLoading(true);
-    setError(null);
-    setTimeout(() => {
-      setIsLoading(false);
-      showToast('Medicine catalog synchronized successfully.');
-    }, 500);
+  // Reset sample data handler
+  const handleResetCatalog = () => {
+    resetSampleData();
+    handleResetFilters();
+    showToast('Sample medicine catalog restored to initial state.');
   };
 
   // Add / Edit Handlers
   const handleSaveMedicine = (savedMedicine) => {
     const exists = medicines.some((m) => m.id === savedMedicine.id);
     if (exists) {
-      setMedicines((prev) =>
-        prev.map((m) => (m.id === savedMedicine.id ? savedMedicine : m))
-      );
+      updateMedicine(savedMedicine);
       showToast(`Updated "${savedMedicine.name}" in catalog.`);
     } else {
-      setMedicines((prev) => [savedMedicine, ...prev]);
+      addMedicine(savedMedicine);
       showToast(`Added "${savedMedicine.name}" to catalog.`);
     }
   };
@@ -142,13 +133,13 @@ export function MedicinesPage() {
   // Delete Handlers
   const handleDeleteConfirm = () => {
     if (!deleteConfirmMedicine) return;
-    setMedicines((prev) => prev.filter((m) => m.id !== deleteConfirmMedicine.id));
+    deleteMedicine(deleteConfirmMedicine.id);
     showToast(`Removed "${deleteConfirmMedicine.name}" from catalog.`);
     setDeleteConfirmMedicine(null);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-w-0">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-[#183B32] text-white shadow-lg border border-[#235246] animate-in fade-in slide-in-from-bottom-2 duration-200">
@@ -160,6 +151,11 @@ export function MedicinesPage() {
       {/* Header and Action Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[#E2EBDD]">
         <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#D7FCD4] text-[#183B32] border border-[#B6CCA1]">
+              Sample Catalog
+            </span>
+          </div>
           <h1 className="text-2xl font-bold text-[#183B32] tracking-tight">
             Medicines Master Catalog
           </h1>
@@ -169,8 +165,14 @@ export function MedicinesPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <Button variant="outline" size="sm" icon={RefreshCw} onClick={handleReload}>
-            Sync
+          <Button
+            variant="outline"
+            size="sm"
+            icon={RotateCcw}
+            onClick={handleResetCatalog}
+            title="Reset sample catalog"
+          >
+            Reset Sample Data
           </Button>
           <Button
             variant="primary"
@@ -183,13 +185,13 @@ export function MedicinesPage() {
         </div>
       </div>
 
-      {/* Metric Cards Row */}
+      {/* Metric Cards Row (Derived dynamically from shared centralized metrics) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] font-semibold text-[#5A6F63] uppercase">Catalog SKUs</p>
-              <h3 className="text-xl font-bold text-[#183B32] mt-1">{stats.total}</h3>
+              <h3 className="text-xl font-bold text-[#183B32] mt-1">{metrics.totalMedicines}</h3>
             </div>
             <div className="w-9 h-9 rounded-xl bg-[#D7FCD4] text-[#183B32] border border-[#B6CCA1] flex items-center justify-center">
               <Pill className="w-4 h-4" />
@@ -202,7 +204,7 @@ export function MedicinesPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] font-semibold text-[#5A6F63] uppercase">In Stock</p>
-              <h3 className="text-xl font-bold text-[#183B32] mt-1">{stats.inStock}</h3>
+              <h3 className="text-xl font-bold text-[#183B32] mt-1">{metrics.inStockCount}</h3>
             </div>
             <div className="w-9 h-9 rounded-xl bg-[#C7E4BB] text-[#183B32] border border-[#BFD8AE] flex items-center justify-center">
               <Check className="w-4 h-4" />
@@ -215,7 +217,7 @@ export function MedicinesPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] font-semibold text-[#5A6F63] uppercase">Low Stock</p>
-              <h3 className="text-xl font-bold text-[#78350F] mt-1">{stats.lowStock}</h3>
+              <h3 className="text-xl font-bold text-[#78350F] mt-1">{metrics.lowStockCount}</h3>
             </div>
             <div className="w-9 h-9 rounded-xl bg-[#FEF3C7] text-[#78350F] border border-[#FDE68A] flex items-center justify-center">
               <AlertTriangle className="w-4 h-4" />
@@ -228,7 +230,7 @@ export function MedicinesPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] font-semibold text-[#5A6F63] uppercase">Out of Stock</p>
-              <h3 className="text-xl font-bold text-[#991B1B] mt-1">{stats.outOfStock}</h3>
+              <h3 className="text-xl font-bold text-[#991B1B] mt-1">{metrics.outOfStockCount}</h3>
             </div>
             <div className="w-9 h-9 rounded-xl bg-[#FEE2E2] text-[#991B1B] border border-[#FECACA] flex items-center justify-center">
               <XCircle className="w-4 h-4" />
@@ -238,7 +240,7 @@ export function MedicinesPage() {
         </Card>
       </div>
 
-      {/* Filter and Search Controls */}
+      {/* Filter and Search Controls (Duplicate Add Button Removed) */}
       <MedicineFilters
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
@@ -247,17 +249,16 @@ export function MedicinesPage() {
         selectedStatus={selectedStatus}
         onStatusChange={handleStatusChange}
         onResetFilters={handleResetFilters}
-        onAddMedicine={() => setFormModalState({ isOpen: true, data: null })}
         totalResults={filteredMedicines.length}
       />
 
       {/* Main Table & Pagination */}
-      <div className="space-y-0">
+      <div className="space-y-0 min-w-0">
         <MedicineTable
           medicines={paginatedMedicines}
           isLoading={isLoading}
           error={error}
-          onRetry={handleReload}
+          onRetry={() => {}}
           onView={(med) => setDetailMedicine(med)}
           onEdit={(med) => setFormModalState({ isOpen: true, data: med })}
           onDelete={(med) => setDeleteConfirmMedicine(med)}
@@ -310,7 +311,7 @@ export function MedicinesPage() {
             <strong className="text-[#183B32]">
               {deleteConfirmMedicine?.name}
             </strong>{' '}
-            ({deleteConfirmMedicine?.sku}) from the master medicine catalog? This will affect POS lookup and reorder tracking.
+            ({deleteConfirmMedicine?.sku}) from the master medicine catalog?
           </p>
 
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#E2EBDD]">
@@ -335,4 +336,3 @@ export function MedicinesPage() {
     </div>
   );
 }
-

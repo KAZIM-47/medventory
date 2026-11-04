@@ -92,13 +92,13 @@ export function MobileNav({ isOpen, onClose }) {
                     <span>{item.name}</span>
                     {item.name === 'Dashboard' && (
                       <span
-                        className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                        className={`ml-auto text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
                           isActive
                             ? 'bg-[#235246] text-[#D7FCD4]'
-                            : 'bg-[#D7FCD4] text-[#183B32]'
+                            : 'bg-[#EEF6EC] text-[#183B32]'
                         }`}
                       >
-                        Live
+                        Sample Data
                       </span>
                     )}
                   </>
@@ -113,8 +113,8 @@ export function MobileNav({ isOpen, onClose }) {
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-[#E2EBDD]">
             <ShieldCheck className="w-4 h-4 text-[#183B32] shrink-0" />
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-[#183B32]">System Active</p>
-              <p className="text-[10px] text-[#5A6F63]">Integrity Enforced</p>
+              <p className="text-xs font-semibold text-[#183B32]">Frontend Preview</p>
+              <p className="text-[10px] text-[#5A6F63]">Sample Data Mode</p>
             </div>
             <span className="w-2 h-2 rounded-full bg-[#B6CCA1]" />
           </div>

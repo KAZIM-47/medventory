@@ -73,7 +73,7 @@ export function MedicineTable({
 
   return (
     <div className="bg-white rounded-xl border border-[#E2EBDD] overflow-hidden shadow-xs">
-      <Table>
+      <Table className="min-w-[720px]">
         <TableHeader>
           <TableRow hover={false}>
             <TableHead>Medicine Name</TableHead>

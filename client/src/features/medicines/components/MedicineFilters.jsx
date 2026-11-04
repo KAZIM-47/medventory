@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Filter, X, Plus } from 'lucide-react';
+import { Search, Filter, X } from 'lucide-react';
 import { MEDICINE_CATEGORIES, STOCK_STATUS_OPTIONS } from '../data/mockMedicinesData';
 import { Button } from '../../../components/ui/Button';
 
@@ -11,7 +11,6 @@ export function MedicineFilters({
   selectedStatus,
   onStatusChange,
   onResetFilters,
-  onAddMedicine,
   totalResults,
 }) {
   const isFiltered =
@@ -89,19 +88,9 @@ export function MedicineFilters({
               icon={X}
               className="text-xs"
             >
-              Reset
+              Reset Filters
             </Button>
           )}
-
-          {/* Add Medicine Primary Action */}
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onAddMedicine}
-            icon={Plus}
-          >
-            Add Medicine
-          </Button>
         </div>
       </div>
 
@@ -119,4 +108,3 @@ export function MedicineFilters({
     </div>
   );
 }
-
