@@ -2,6 +2,7 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { AppShell } from '../components/layout/AppShell';
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
+import { MedicinesPage } from '../features/medicines/pages/MedicinesPage';
 import { PlaceholderPage } from '../components/ui/PlaceholderPage';
 import {
   Pill,
@@ -24,14 +25,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'medicines',
-        element: (
-          <PlaceholderPage
-            title="Medicines Master Catalog"
-            moduleName="Medicines"
-            description="Manage pharmaceutical classifications, brands, generic formulations, strengths, and dosage forms."
-            icon={Pill}
-          />
-        ),
+        element: <MedicinesPage />,
       },
       {
         path: 'inventory',
