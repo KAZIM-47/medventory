@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Official Primary Palette: Tea Green + Celadon */
+  --color-tea-100: #D7FCD4;
+  --color-tea-200: #CFF0C8;
+  --color-tea-300: #C7E4BB;
+  --color-celadon-100: #BFD8AE;
+  --color-celadon-200: #BBD2A8;
+  --color-celadon-300: #B6CCA1;
+
+  /* Complementary Color: Deep Forest Green */
+  --color-forest: #183B32;
+  --color-forest-hover: #112B24;
+  --color-forest-light: #235246;
+
+  /* Neutral Colors */
+  --color-app-bg: #F7FAF5;
+  --color-card-bg: #FFFFFF;
+  --color-body: #34423A;
+  --color-border: #E2EBDD;
+
+  /* Functional Semantic Highlights */
+  --color-warning-bg: #FEF3C7;
+  --color-warning-text: #78350F;
+  --color-warning-border: #FDE68A;
+  --color-danger-bg: #FEE2E2;
+  --color-danger-text: #991B1B;
+  --color-danger-border: #FECACA;
+}
+
+:root {
+  --app-bg: #F7FAF5;
+  --card-bg: #FFFFFF;
+  --body-text: #34423A;
+  --border-color: #E2EBDD;
+  --forest-green: #183B32;
+  --tea-green: #D7FCD4;
+  --celadon: #B6CCA1;
+}
+
+body {
+  margin: 0;
+  background-color: #F7FAF5;
+  color: #34423A;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
