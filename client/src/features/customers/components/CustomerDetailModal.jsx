@@ -18,13 +18,16 @@ import {
 import { formatINR } from '../../../data/customerData';
 
 export function CustomerDetailModal({
-  isOpen,
+  isOpen = true,
   onClose,
   customer,
   onEditCustomer,
+  onEdit,
   onToggleStatus,
 }) {
   if (!customer) return null;
+
+  const handleEdit = onEditCustomer || onEdit;
 
   const isActive = customer.status === 'Active';
 
@@ -314,7 +317,7 @@ export function CustomerDetailModal({
               icon={Edit3}
               onClick={() => {
                 onClose();
-                onEditCustomer(customer);
+                if (handleEdit) handleEdit(customer);
               }}
             >
               Edit Profile

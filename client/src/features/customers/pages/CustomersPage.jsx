@@ -229,18 +229,17 @@ export function CustomersPage() {
       </div>
 
       {/* 4. Customer Details Profile Modal */}
-      {detailCustomer && (
-        <CustomerDetailModal
-          customer={detailCustomer}
-          onClose={() => setDetailCustomer(null)}
-          onEdit={() => {
-            const toEdit = detailCustomer;
-            setDetailCustomer(null);
-            setFormModalState({ isOpen: true, customer: toEdit });
-          }}
-          onToggleStatus={() => handleToggleStatus(detailCustomer)}
-        />
-      )}
+      <CustomerDetailModal
+        isOpen={Boolean(detailCustomer)}
+        customer={detailCustomer}
+        onClose={() => setDetailCustomer(null)}
+        onEditCustomer={(cust) => {
+          const toEdit = cust || detailCustomer;
+          setDetailCustomer(null);
+          setFormModalState({ isOpen: true, customer: toEdit });
+        }}
+        onToggleStatus={() => handleToggleStatus(detailCustomer)}
+      />
 
       {/* 5. Customer Add / Edit Modal */}
       <CustomerFormModal

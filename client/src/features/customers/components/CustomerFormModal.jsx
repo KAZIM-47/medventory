@@ -202,7 +202,12 @@ export function CustomerFormModal({
       isOpen={isOpen}
       onClose={onClose}
       title={isEditing ? 'Edit Customer Profile' : 'Add New Customer'}
-      size="xl"
+      subtitle={
+        isEditing
+          ? `Update account details, credit limit, and address for ${formData.name || 'customer'}`
+          : 'Register a new doctor, clinic, hospital, or pharmacy account'
+      }
+      maxWidth="max-w-3xl"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Business Details */}
